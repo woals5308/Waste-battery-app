@@ -6,8 +6,17 @@
     },
     "plugins": [
       "expo-router"
+      
     ],
     "name": "notetest-app",
     "slug": "notetest-app"
+  },
+  "android": {
+    "package": "com.example.notetest",
+    "config": {
+      "googleMaps": {
+        "apiKey": "AIzaSyBhn70iCWfX0amrbjxioM4JEKVmFERzozI"
+      }
+    }
   }
 }
