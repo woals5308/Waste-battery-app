@@ -5,18 +5,33 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router"
-      
+      "expo-router",
+      "expo-camera",      
+      [
+        "expo-location",
+        {
+          "isAndroidBackgroundLocationEnabled": true
+        }
+      ]
     ],
     "name": "notetest-app",
-    "slug": "notetest-app"
-  },
-  "android": {
-    "package": "com.example.notetest",
-    "config": {
-      "googleMaps": {
-        "apiKey": "AIzaSyBhn70iCWfX0amrbjxioM4JEKVmFERzozI"
+    "slug": "notetest-app",
+    "android": {
+      "package": "com.anonymous.notetestapp",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_BACKGROUND_LOCATION",
+        "android.permission.CAMERA",                      
+        "WRITE_EXTERNAL_STORAGE",      
+        "VIBRATE"                      
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBhn70iCWfX0amrbjxioM4JEKVmFERzozI"
+        }
       }
-    }
+    },
+    "newArchEnabled": true
   }
 }

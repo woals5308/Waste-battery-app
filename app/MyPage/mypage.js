@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { icons } from "../../assets/icons/icons";
 
 const UserInfo = () => {
   const router = useRouter();
@@ -19,17 +20,12 @@ const UserInfo = () => {
       {/* 상태바 설정 */}
       <StatusBar backgroundColor="#4BB179" barStyle="light-content" />
 
-      {/* 상단 뒤로 가기 버튼 */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backIcon}>←</Text>
-      </TouchableOpacity>
-
       {/* 사용자 정보 */}
       <View style={styles.content}>
         {/* 프로필 아이콘 */}
         <Image
           style={styles.profileIcon}
-          source={{ uri: "https://via.placeholder.com/100x100.png" }} // 기본 프로필 이미지
+          source={icons.myInfo} // 기본 프로필 이미지
         />
 
         {/* 타이틀 */}
@@ -91,38 +87,28 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#4BB179",
   },
-  backButton: {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    zIndex: 10,
-  },
-  backIcon: {
-    fontSize: 24,
-    color: "#FFFFFF",
-  },
   content: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "center", // 세로 가운데 정렬
+    alignItems: "center", // 가로 가운데 정렬
     paddingHorizontal: 20,
   },
   profileIcon: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: "#FFFFFF",
-    marginBottom: 20,
+    marginBottom: 0,
   },
   title: {
     fontSize: 28,
     color: "#FFFFFF",
     fontWeight: "bold",
     marginBottom: 30,
+    justifyContent: "center",
   },
   infoBox: {
     width: "100%",
-    marginBottom: 15,
+    marginBottom: 5,
   },
   label: {
     fontSize: 16,
@@ -141,18 +127,19 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   button: {
-    marginTop: 30,
-    width: "80%",
+    width: "60%",
     height: 50,
-    backgroundColor: "#FFFFFF",
+    borderColor: "#fff",
+    borderWidth: 1,
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+    top:16,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#4BB179",
+    color: "#fff",
   },
 });
 

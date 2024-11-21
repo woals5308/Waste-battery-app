@@ -7,6 +7,7 @@ import {
   Text,
 } from "react-native";
 import GoogleMap from "../../component/Map/GoogleMap"; // GoogleMap 컴포넌트 가져오기
+import { router } from "expo-router";
 
 const Main = () => {
 //   const [search, setSearch] = useState(""); // 검색어 상태
@@ -15,6 +16,8 @@ const Main = () => {
 //     // 검색어를 기반으로 위치를 업데이트하는 로직 (Geocoding API 사용)
 //     console.log("검색된 장소:", search);
 //   };
+
+
 
   return (
     <View style={styles.container}>
@@ -40,18 +43,30 @@ const Main = () => {
 
       {/* 하단 네비게이션 */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity style={styles.navItem}
+        // onPress={()=>router.push()} 여기 포인트 샵 들어가 자리 포인트샵 경로
+        >
           <Text>포인트샵</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+
+        <TouchableOpacity style={styles.navItem}
+         onPress={()=>router.push('/QR/qr')}  여기 QR 들어갈 경로
+        >
           <Text>QR</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+
+        <TouchableOpacity style={styles.navItem}
+         onPress={()=>router.push('/CollectionVolume/CV')}
+        >
           <Text>수거함</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
+
+        <TouchableOpacity style={styles.navItem}
+        onPress={()=>router.push('/MyPage/mypage')}
+        >
           <Text>내정보</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );

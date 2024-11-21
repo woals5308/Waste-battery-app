@@ -29,7 +29,7 @@ const Signup = () => {
     //         return; // 함수 종료
     //     }
     //     try{
-    //         const response = await axios.post('', {
+    //         const response = await axios.post('창진이', {
     //             Id,
     //             Password,
     //             PhoneNumber,

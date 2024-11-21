@@ -25,7 +25,7 @@ const StartPage = () => {
       {/* SafeAreaView로 화면 꽉 채우기 */}
       <SafeAreaView style={styles.container}>
         {/* 배터리 아이콘 */}
-        <Image source={icons.battery} style={styles.icon} />
+        <Image source={require('../assets/icons/battery.png')} style={styles.icon} />
 
         {/* 메인 타이틀 */}
         <Text style={styles.mainTitle}>폐건전지를 부탁해</Text>
