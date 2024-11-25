@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 
@@ -20,37 +20,25 @@ const GoogleMap = () => {
   useEffect(() => {
     const getCurrentLocation = async () => {
       try {
-        // 위치 권한 요청
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
           setErrorMsg("위치 권한이 거부되었습니다.");
           return;
         }
 
-        // 위치 구독 (실시간 업데이트)
-        await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.High,
-            timeInterval: 5000, // 5초 간격으로 업데이트
-            distanceInterval: 10, // 10미터 이동 시 업데이트
-          },
-          (location) => {
-            const { latitude, longitude } = location.coords;
+        const location = await Location.getCurrentPositionAsync({});
+        const { latitude, longitude } = location.coords;
 
-            // 지도 중심 위치 업데이트
-            setRegion((prevRegion) => ({
-              ...prevRegion,
-              latitude,
-              longitude,
-            }));
+        setRegion((prevRegion) => ({
+          ...prevRegion,
+          latitude,
+          longitude,
+        }));
 
-            // 마커 위치 업데이트
-            setMarkerCoords({
-              latitude,
-              longitude,
-            });
-          }
-        );
+        setMarkerCoords({
+          latitude,
+          longitude,
+        });
       } catch (error) {
         console.error("Error getting location:", error);
         setErrorMsg("위치 정보를 가져오는 데 실패했습니다.");
@@ -70,12 +58,27 @@ const GoogleMap = () => {
           region={region}
           onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
         >
-          {/* 마커: 실시간 위치 */}
+          {/* 사용자 위치 마커 */}
           <Marker
             coordinate={markerCoords}
             title="현재 위치"
             description="실시간 위치입니다."
           />
+
+          {/* 수거함 커스텀 마커 */}
+          <Marker
+            coordinate={{ latitude: 37.5665, longitude: 126.9780 }}
+            anchor={{ x: 0.5, y: 0.5 }} // 중심점 조정
+          >
+            <Image
+              source={require("../../assets/icons/battery.png")} // 배터리 이미지 경로
+              style={{
+                width: 30, // 고정된 너비
+                height: 30, // 고정된 높이
+              }}
+              resizeMode="contain"
+            />
+          </Marker>
         </MapView>
       )}
     </View>

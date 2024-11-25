@@ -12,41 +12,53 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "../../assets/icons/icons";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // AsyncStorage 추가
 
 const Signup = () => {
-    const router = useRouter();
-    // const [Id , setId] = useState('');
-    // const [Password, setPassword] = useState('');
-    // const [PhoneNumber, setPhoneNumber] = useState('');
-    // const [Email, setEmail] = useState('');
-    // const [Adress, setAdress] = useState('');
+  const [userId, setUserId] = useState("");
+  const [userPw, setUserPw] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userAdd, setUserAdd] = useState("");
+  const [userEmail, setUserEmail] = useState("");
 
-    // const handleSingup = async () =>{
-    //     if(!Id || !Password || !PhoneNumber || !Email || !Adress){
-    //         alert('모든 항목을 입력해주세요');
-    //         return; // 함수 종료
-    //     }
-    //     try{
-    //         const response = await axios.post('창진이', {
-    //             Id,
-    //             Password,
-    //             PhoneNumber,
-    //             Email,
-    //             Adress,
-    //         });
-    //         console.log('회원가입 성공: ',response.data);
-    //         alert('회원가입에 성공하셨습니다.');
-    //         router.push('/sign/login')
-    //     }catch(error){
-    //             console.error('회원가입 실패:',response.data);
-    //             alert('회원가입 실패')
-            
-    //     }
+  const router = useRouter();
 
-    // };
+  // 회원가입 처리 함수
+  const handleSignup = async () => {
+    // 입력 값 검증
+    if (!userId || !userPw || !userName || !userEmail || !userAdd) {
+      alert("모든 항목을 입력해주세요.");
+      return;
+    }
 
+    try {
+      // 서버로 회원가입 요청
+      const formData = new FormData();
+      formData.append("userId", userId);
+      formData.append("userPw", userPw);
+      formData.append("userName", userName);
+      formData.append("userAdd", userAdd);
+      formData.append("userEmail", userEmail);
+
+      console.log(formData)
+      console.log("저기")
+
+      const response = await axios.post('http://192.168.0.10:8080/join', formData
+      );
+
+      alert("회원가입 성공하셨습니다.");
+      router.back('/sign/login');
+      console.log("여기")
+      console.log(response)
+
+    } catch (error) {
+      console.error("회원가입 실패:", error.response?.data || error.message);
+      console.log(error.status)
+      alert("회원가입 중 오류가 발생하였습니다.");
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -55,62 +67,54 @@ const Signup = () => {
     >
       <StatusBar backgroundColor="#4BB179" barStyle="light-content" />
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.header}>
-          {/* 뒤로 가기 아이콘 */}
-          <TouchableOpacity onPress={() => router.back('/sign/login')}>
-            <Image
-              style={styles.backIcon}
-              source={icons.backicon}
-            />
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.content}>
           {/* 배터리 이미지 */}
-          <Image
-            style={styles.image}
-            source={icons.battery}
-          />
+          <Image style={styles.image} source={icons.battery} />
 
           {/* 제목 */}
           <Text style={styles.title}>회원 가입</Text>
+          <Text style={styles.subtitle}>Join The Membership</Text>
 
           {/* 입력 필드 */}
-          <TextInput style={styles.input} 
-          placeholder="아이디" 
-          placeholderTextColor="#fff"
-        //   value={Id}
-        //   onChangeText={setId}
+          <TextInput
+            style={styles.input}
+            placeholder="아이디"
+            placeholderTextColor="#fff"
+            value={userId}
+            onChangeText={setUserId}
           />
           <TextInput
             style={styles.input}
             placeholder="비밀번호"
             placeholderTextColor="#fff"
             secureTextEntry={true}
-            // value={Password}
-            // onChangeText={setPassword}
+            value={userPw}
+            onChangeText={setUserPw}
           />
-          <TextInput style={styles.input} 
-           placeholder="전화번호"
-           placeholderTextColor="#fff"
-        //    value={PhoneNumber}
-        //    onChangeText={setPhoneNumber}
-           />
-          <TextInput style={styles.input} 
-          placeholder="이메일"
-          placeholderTextColor="#fff"
-        //   value={Email}
-        //   onChangeText={setEmail}
+          <TextInput
+            style={styles.input}
+            placeholder="닉네임"
+            placeholderTextColor="#fff"
+            value={userName}
+            onChangeText={setUserName}
           />
-          <TextInput style={styles.input}
-          placeholder="주소"
-          placeholderTextColor="#fff"
-        //   value={Adress}
-        //   onChangeText={setAdress}
+          <TextInput
+            style={styles.input}
+            placeholder="주소"
+            placeholderTextColor="#fff"
+            value={userAdd}
+            onChangeText={setUserAdd}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="이메일"
+            placeholderTextColor="#fff"
+            value={userEmail}
+            onChangeText={setUserEmail}
           />
 
-          {/* 등록하기 버튼  여기서 style={style.button} 옆에 나중에 창진이랑 연동하면 위에 handleSignup함수 사용 onPress={handleSingup}*/}
-          <TouchableOpacity style={styles.button}>   
+          {/* 등록하기 버튼 */}
+          <TouchableOpacity style={styles.button} onPress={handleSignup}>
             <Text style={styles.buttonText}>등록하기</Text>
           </TouchableOpacity>
         </View>
@@ -128,17 +132,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20, // 좌우 여백
   },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  backIcon: {
-    width: 40, // 아이콘 너비
-    height: 30, // 아이콘 높이
-    marginLeft: 5, // 왼쪽 여백
-  },
   content: {
     flex: 1,
     justifyContent: "center",
@@ -150,10 +143,16 @@ const styles = StyleSheet.create({
     height: 200,
   },
   title: {
-    fontSize: 40, // 제목 폰트 크기
+    fontSize: 30, // 제목 폰트 크기
     color: "#fff",
     fontWeight: "bold",
-    marginBottom: 30,
+    marginBottom: 5, // 제목과 부제목 간격 최소화
+  },
+  subtitle: {
+    fontSize: 18, // 부제목 폰트 크기
+    color: "#fff",
+    fontWeight: "500",
+    marginBottom: 30, // 부제목 아래 간격 설정
   },
   input: {
     width: "100%",
