@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { icons } from "../../assets/icons/icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from 'axios';
 
 const UserInfo = () => {
   const [userInfo, setUserInfo] = useState(null);
@@ -27,14 +28,20 @@ const UserInfo = () => {
         return;
       }
 
+      console.log(token)
+      console.log("요기");
+
       // 서버에서 사용자 정보 요청
-      const response = await axios.get("http://localhost:8080/msp/myInfo", {
+      const response = await axios.get("http://192.168.0.10:8080/msp/myInfo", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${token}`
         },
       });
+      console.log("저기");
 
       setUserInfo(response.data); // 사용자 정보 저장
+
+      console.log(response)
     } catch (error) {
       console.error("유저 정보 가져오기 실패:", error);
       alert("유저 정보를 가져오는 중 문제가 발생했습니다.");
@@ -72,8 +79,8 @@ const UserInfo = () => {
           <TextInput style={styles.info} value={userInfo.userAdd} editable={false} />
         </View>
         <View style={styles.infoBox}>
-          <Text style={styles.label}>전화번호</Text>
-          <TextInput style={styles.info} value={userInfo.userPhone} editable={false} />
+          <Text style={styles.label}>닉네임</Text>
+          <TextInput style={styles.info} value={userInfo.userName} editable={false} />
         </View>
         <View style={styles.infoBox}>
           <Text style={styles.label}>포인트</Text>

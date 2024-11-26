@@ -42,21 +42,35 @@ const Signup = () => {
       formData.append("userAdd", userAdd);
       formData.append("userEmail", userEmail);
 
-      console.log(formData)
-      console.log("저기")
+      console.log("요청 전!")
 
-      const response = await axios.post('http://192.168.0.10:8080/join', formData
+      const response = await axios.post("http://192.168.0.10:8080/join", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // 서버가 요구하는 형식으로 설정
+        }
+        
+
+      }
       );
-
-      alert("회원가입 성공하셨습니다.");
+      alert("회원가입을 성공하셨습니다.");
       router.back('/sign/login');
-      console.log("여기")
+
       console.log(response)
 
     } catch (error) {
-      console.error("회원가입 실패:", error.response?.data || error.message);
-      console.log(error.status)
-      alert("회원가입 중 오류가 발생하였습니다.");
+      if (error.response) {
+        // 서버에서 응답이 왔지만, 오류가 발생한 경우 (예: 4xx, 5xx)
+        console.error('Error response:', error.response);
+        console.error('Error status:', error.response.status);
+        console.error('Error data:', error.response.data);  // 서버에서 보내는 에러 메시지 확인
+      } else if (error.request) {
+        // 요청은 보냈지만 서버로부터 응답을 받지 못한 경우
+        console.error('Error request:', error.request);
+      } else {
+        // 요청을 설정하는 중 발생한 에러
+        console.error('Error message:', error.message);
+      }
+      console.error('Full error:', error);  // 전체 에러 객체 출력 (디버깅용)
     }
   };
 
@@ -185,3 +199,4 @@ const styles = StyleSheet.create({
 });
 
 export default Signup;
+

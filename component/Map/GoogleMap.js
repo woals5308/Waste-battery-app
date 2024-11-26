@@ -29,11 +29,11 @@ const GoogleMap = () => {
         const location = await Location.getCurrentPositionAsync({});
         const { latitude, longitude } = location.coords;
 
-        setRegion((prevRegion) => ({
-          ...prevRegion,
+        setRegion({
+          ...region,
           latitude,
           longitude,
-        }));
+        });
 
         setMarkerCoords({
           latitude,
@@ -57,6 +57,7 @@ const GoogleMap = () => {
           style={styles.map}
           region={region}
           onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
+          onError={(error) => console.error("Map loading error:", error)}
         >
           {/* 사용자 위치 마커 */}
           <Marker
@@ -72,10 +73,7 @@ const GoogleMap = () => {
           >
             <Image
               source={require("../../assets/icons/battery.png")} // 배터리 이미지 경로
-              style={{
-                width: 30, // 고정된 너비
-                height: 30, // 고정된 높이
-              }}
+              style={styles.customMarker}
               resizeMode="contain"
             />
           </Marker>
@@ -99,6 +97,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 16,
     color: "red",
+  },
+  customMarker: {
+    width: 40, // 적절한 크기로 조정
+    height: 40,
   },
 });
 

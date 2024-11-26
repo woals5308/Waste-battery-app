@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   StyleSheet,
@@ -10,41 +11,37 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "../../assets/icons/icons";
-import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage"; // AsyncStorage 추가
 
-const Login = () => {
-  const [userId, setUserId] = useState(""); // 사용자 ID 상태
-  const [userPw, setUserPw] = useState(""); // 비밀번호 상태
+const login = () => {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   // 로그인 처리 함수
   const handleLogin = async () => {
-    if (!userId || !userPw) {
+    if (!id || !password) {
       alert("아이디와 비밀번호를 모두 입력해주세요.");
       return;
     }
 
     try {
       const formData = new FormData();
-      formData.append("userId", userId);
-      formData.append("userPw", userPw);
-
-      const response = await axios.post("http://192.168.0.10:8080/login", formData);
-
-      console.log(response.headers.authorization)
-     
-
-      // 서버로부터 받은 응답에서 토큰 추출
-      const token = response.headers.authorization
-
-      console.log(token)
-
+      formData.append("userId", id);  // 'userId' 대신 'id' 사용
+      formData.append("userPw", password);  // 'userPw' 대신 'password' 사용
+      
+      const response = await axios.post("http://192.168.0.10:8080/login", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // 서버가 요구하는 형식으로 설정
+        }
+      });
+      console.log(response.headers.authorization);
+      const  token  = response.headers.authorization; // 백엔드에서 받은 토큰
       if (token) {
-        // AsyncStorage에 토큰 저장
+        // 토큰을 AsyncStorage에 저장
         await AsyncStorage.setItem("userToken", token);
         alert("로그인에 성공하셨습니다.");
         router.push("/Main/main"); // 메인 화면으로 이동
@@ -52,7 +49,7 @@ const Login = () => {
         alert("로그인에 실패하였습니다.");
       }
     } catch (error) {
-      console.error("로그인 실패:", error.response?.data || error.message);
+      console.error("로그인 실패:", error);
       alert("로그인 요청 중 문제가 발생했습니다.");
     }
   };
@@ -80,8 +77,8 @@ const Login = () => {
             style={styles.input}
             placeholder="아이디"
             placeholderTextColor="#fff"
-            value={userId}
-            onChangeText={setUserId}
+            value={id}
+            onChangeText={setId}
           />
 
           {/* 비밀번호 입력 */}
@@ -90,12 +87,12 @@ const Login = () => {
             placeholder="비밀번호"
             placeholderTextColor="#fff"
             secureTextEntry={true}
-            value={userPw}
-            onChangeText={setUserPw}
+            value={password}
+            onChangeText={setPassword}
           />
 
-          {/* 로그인 버튼 */}         
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>   
+          {/* 로그인 버튼 */}
+          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
             <Text style={styles.loginText}>로그인</Text>
           </TouchableOpacity>
 
@@ -114,6 +111,8 @@ const Login = () => {
     </KeyboardAvoidingView>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -191,4 +190,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default login
